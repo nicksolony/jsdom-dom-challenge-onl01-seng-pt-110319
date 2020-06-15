@@ -4,9 +4,9 @@ let minus = document.querySelector("#minus");
 let likes = document.querySelector("ul.likes");
 let like = document.querySelector("#heart");
 let pause= document.querySelector("#pause");
+let comments=document.querySelector("#list")
+let commentsForm=document.querySelector("#comment-form")
 let likeCount=0;
-let status = 1;
-
 
 function updateCounter(){
   counter.innerText=parseInt(counter.innerText)+1;
@@ -18,8 +18,8 @@ function decreaseCounter(){
 
 function addLike() {
   if (likes.lastChild) {
-    let li = likes.lastChild;
-    if (li.id===counter.innerText) {
+    let li =document.getElementById(parseInt(counter.innerText));
+    if (li) {
       likeCount++;
       li.innerText=`${li.id} has been liked ${likeCount} times`;
     } else {
@@ -40,23 +40,37 @@ function addLike() {
   }
 };
 
-
-function controlTimer() {
-
-
-}
+function addComment(event) {
+  event.preventDefault()
+  if (commentsForm.comment.value !== "") {
+    let p=document.createElement("p");
+    p.innerText=commentsForm.comment.value;
+    comments.appendChild(p);
+    commentsForm.comment.value="";
+  };
+};
 
 let runTimer = setInterval(updateCounter,1000);
 plus.addEventListener("click", updateCounter);
 minus.addEventListener("click", decreaseCounter);
 like.addEventListener("click",addLike);
+commentsForm.submit.addEventListener("click",addComment)
+
+
 pause.addEventListener("click",function () {
-  if (runTimer>0) {
+  if (pause.innerText==="pause") {
     clearInterval(runTimer);
-    runTimer=0;
+    plus.disabled=true;
+    minus.disabled=true;
+    like.disabled=true;
+    commentsForm.submit.disabled=true;
     pause.innerText="resume";
   } else {
     runTimer = setInterval(updateCounter,1000);
     pause.innerText="pause";
+    plus.disabled=false;
+    minus.disabled=false;
+    like.disabled=false;
+    commentsForm.submit.disabled=false;
   }
 });
